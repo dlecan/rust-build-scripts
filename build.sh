@@ -1,8 +1,8 @@
 #!/bin/bash
 
-MULTI_ARCH=x86_64-unknown-linux-gnu-arm-unknown-linux-gnueabihf
-RUST_VERSION=1.4.0
-CARGO_VERSION=0.6.0
+MULTI_ARCH=arm-unknown-linux-gnueabihf
+RUST_VERSION=1.5.0
+CARGO_VERSION=0.7.0
 RUST_NAME=rust-$RUST_VERSION-$MULTI_ARCH
 RUST_PACKAGE=$RUST_NAME.tar.gz
 
@@ -61,10 +61,17 @@ make install
 
 echo "Cargo $CARGO_VERSION build done!"
 
-cd $ROOT_DIR
+echo "Build final archive..."
 
-tar -zcf $RUST_PACKAGE -C $ROOT_DIR $RUST_NAME
+tar -zcf $RUST_PACKAGE \
+  -C $ROOT_DIR \
+  --exclude $RUST_NAME/lib/rustlib/x86_64-unknown-linux-gnu \
+  $RUST_NAME
 
 cd $ORIG_DIR
 
+echo "Remove work dir..."
+
 rm -rf $ROOT_DIR
+
+echo "Done !"
